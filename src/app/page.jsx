@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FiArrowUpRight, FiMoon, FiSun } from "react-icons/fi";
 import companyLogo from "../assets/logo.png";
-import { useTheme } from "../common/AppShell";
+import { FiArrowUpRight } from "react-icons/fi";
 
 const destinations = [
   { title: "Himalayan escapes", place: "Nepal", accent: "01" },
@@ -13,7 +12,6 @@ const destinations = [
 ];
 
 export default function HomePage() {
-  const { isNightMode, onToggleNightMode } = useTheme();
   return (
     <div className="home-page">
       <section className="hero-section">
@@ -28,16 +26,7 @@ export default function HomePage() {
             <Link className="primary-action" href="/tours">
               Explore journeys <FiArrowUpRight aria-hidden="true" />
             </Link>
-            <button
-              className="theme-toggle"
-              type="button"
-              onClick={onToggleNightMode}
-              aria-label={isNightMode ? "Use day mode" : "Use night mode"}
-              aria-pressed={isNightMode}
-            >
-              {isNightMode ? <FiSun aria-hidden="true" /> : <FiMoon aria-hidden="true" />}
-              <span>{isNightMode ? "Day mode" : "Night mode"}</span>
-            </button>
+            
           </div>
         </div>
         <div className="hero-aside">

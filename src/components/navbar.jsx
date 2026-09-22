@@ -8,7 +8,9 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import '../app/globals.css'
 import { RxCross2, RxHamburgerMenu  } from "react-icons/rx";
+import { FiArrowUpRight, FiMoon, FiSun } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
+import { useTheme } from "../common/AppShell";
 import { getDestinationSlug } from "@/lib/destinationSlug";
 
 const tripCategories = [
@@ -138,6 +140,8 @@ export default function NavbarMenu() {
     closeNavbar();
   }, [pathname]);
 
+  const { isNightMode, onToggleNightMode } = useTheme();
+
   /* ================= RENDER ================= */
   return (
     <Navbar
@@ -146,9 +150,7 @@ export default function NavbarMenu() {
       onToggle={(expanded) => setIsNavbarExpanded(expanded)}
       className={`example ${
         !isVisible ? "navbar-hidden" : ""
-      } ${isScrolled ? "navbar-scrolled" : ""} ${
-        isNavbarExpanded ? "navbar-toggled" : ""
-      }`}
+      } ${isScrolled ? "navbar-scrolled" : ""} ${isNavbarExpanded ? "navbar-toggled" : ""}`}
     >
       <Container>
         <Navbar.Brand as={Link} href="/" onClick={closeNavbar}>
@@ -156,28 +158,25 @@ export default function NavbarMenu() {
             <Image src={companylogo} alt="Company Logo" height={65} />
           </div>
         </Navbar.Brand>
-        
+
         {/* navbar open and close button */}
-        {
-          isNavbarExpanded ? (
-            <button
-              className="navbar-toggle"
-              aria-label="Close navigation menu"
-              onClick={closeNavbar}
-            >
-              <RxCross2 size={35} />
-            </button>
-          ) : (
-            <button
-              className="navbar-toggle"
-              aria-label="Open navigation menu"
-              onClick={() => setIsNavbarExpanded(true)}
-            >
-              <RxHamburgerMenu size={35} />
-            </button>
-          )
-        }
-        
+        {isNavbarExpanded ? (
+          <button
+            className="navbar-toggle"
+            aria-label="Close navigation menu"
+            onClick={closeNavbar}
+          >
+            <RxCross2 size={35} />
+          </button>
+        ) : (
+          <button
+            className="navbar-toggle"
+            aria-label="Open navigation menu"
+            onClick={() => setIsNavbarExpanded(true)}
+          >
+            <RxHamburgerMenu size={35} />
+          </button>
+        )}
 
         <Navbar.Collapse>
           <Nav className="ms-auto">
@@ -193,11 +192,7 @@ export default function NavbarMenu() {
               onMouseLeave={handleMouseLeave}
             >
               <div className="nav-tours-row">
-                <Link
-                  href="/tours"
-                  className="nav-link nav-tours-link"
-                  onClick={closeNavbar}
-                >
+                <Link href="/tours" className="nav-link nav-tours-link" onClick={closeNavbar}>
                   Tours
                 </Link>
                 <button
@@ -207,11 +202,15 @@ export default function NavbarMenu() {
                   aria-expanded={isMenuOpen("tours")}
                   onClick={handleMobileToggle}
                 >
-                  { isMenuOpen("tours") ? <IoIosArrowDown style={{ transform: "rotate(180deg)", transition: "transform 0.3s ease" }} /> :
-
-                    !isMenuOpen("tours") && <IoIosArrowDown style={{ transition: "transform 0.3s ease" }} />
-                  }
-                   
+                  {isMenuOpen("tours") ? (
+                    <IoIosArrowDown
+                      style={{ transform: "rotate(180deg)", transition: "transform 0.3s ease" }}
+                    />
+                  ) : (
+                    !isMenuOpen("tours") && (
+                      <IoIosArrowDown style={{ transition: "transform 0.3s ease" }} />
+                    )
+                  )}
                 </button>
               </div>
 
@@ -224,18 +223,18 @@ export default function NavbarMenu() {
                 onTouchStart={handleDropdownTouchStart}
                 onTouchMove={handleDropdownTouchMove}
               >
-                {tripCategories.length > 0 ? (
-                  tripCategories.map((destination) => (
-                    <Link
-                      key={destination.slug || destination.title}
-                      href={`/tour/${getDestinationSlug(destination)}`}
-                      className="dropdown-item"
-                      onClick={closeNavbar}
-                    >
-                      {destination.shortTitle || destination.name || destination.title}
-                    </Link>
-                  ))
-                ) : null}
+                {tripCategories.length > 0
+                  ? tripCategories.map((destination) => (
+                      <Link
+                        key={destination.slug || destination.title}
+                        href={`/tour/${getDestinationSlug(destination)}`}
+                        className="dropdown-item"
+                        onClick={closeNavbar}
+                      >
+                        {destination.shortTitle || destination.name || destination.title}
+                      </Link>
+                    ))
+                  : null}
               </div>
             </Nav.Item>
             <Nav.Link as={Link} href="/about-us" onClick={closeNavbar}>
@@ -248,6 +247,16 @@ export default function NavbarMenu() {
               Membership
             </Nav.Link>
           </Nav>
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={onToggleNightMode}
+            aria-label={isNightMode ? "Use day mode" : "Use night mode"}
+            aria-pressed={isNightMode}
+          >
+            {isNightMode ? <FiSun aria-hidden="true" /> : <FiMoon aria-hidden="true" />}
+            <span>{isNightMode ? "Day mode" : "Night mode"}</span>
+          </button>
         </Navbar.Collapse>
       </Container>
     </Navbar>
